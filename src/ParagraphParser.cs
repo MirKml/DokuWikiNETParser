@@ -35,6 +35,9 @@ namespace DokuWiki
                 var lastBlock = CreateNode(firstIndex, textLength, wikiText);
                 blockNodes.Add(lastBlock);
             }
+
+            // return only non empty paragraphs, some paragraphs can be empty e.g. where
+            // some LF are in the end of wiki text
             return blockNodes.Where(n => !string.IsNullOrWhiteSpace(n.Content)).ToArray();
         }
 
@@ -52,6 +55,12 @@ namespace DokuWiki
             node.StartPosition = firstIndex == 0 ? 0 : firstIndex + 1;
             node.EndPosition = nextIndex;
             node.Content = wikiText.Substring(node.StartPosition, node.EndPosition - node.StartPosition);
+
+            // remove white spaces from the end of paragraph
+            var originalContentLength = node.Content.Length;
+            node.Content = node.Content.TrimEnd();
+            node.EndPosition -= originalContentLength - node.Content.Length;
+            
             return node;
         }
     }

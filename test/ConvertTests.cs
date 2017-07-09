@@ -35,8 +35,7 @@ A odřádkovaná druhá věta ale pořád třetí odstavec.
 
 ==== Nadpis čtvrtého odstavce ====
 Tohle je začátek čtvrtého odstavce, první věta.
-A odřádkovaná druhá věta ale pořád čtvrtý odstavec.
-";
+A odřádkovaná druhá věta ale pořád čtvrtý odstavec.";
 
            Assert.AreEqual("", Converter.Convert(wikiText));
         }
