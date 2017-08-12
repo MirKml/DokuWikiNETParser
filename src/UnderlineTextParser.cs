@@ -2,11 +2,11 @@ using System.Text.RegularExpressions;
 
 namespace DokuWiki
 {
-    class EmphasisTextParser: RegExpParser
+    class UnderlineTextParser: RegExpParser
     {
         private const string regExp = "__(.*?)__";
 
-        internal EmphasisTextParser() : base(regExp, NodeType.BoldText)
+        internal UnderlineTextParser() : base(regExp, NodeType.UnderlineText)
         { }
     }
 }

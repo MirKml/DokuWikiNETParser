@@ -21,17 +21,17 @@ namespace DokuWiki
         public int EndPosition { get; set; }
 
         /// <summary>
-        /// Content of the node without boundary wiki marks. 
+        /// Content of the node without boundary wiki marks.
         /// It can be wiki markup, which can be parsed or final text, which will be rendered
         /// during conversion phase.
-        /// <summary>
+        /// </summary>
         public string Content { get; set; }
 
         public NodeType Type { get; private set; }
 
         /// <summary>
         /// list of nested nodes
-        /// <summary>
+        /// </summary>
         public List<Node> Nodes { get; set; }
 
         /// <summary>
@@ -68,6 +68,15 @@ namespace DokuWiki
         public int Level { get; set; }
     }
 
+    class UrlNode: Node
+    {
+        public UrlNode() : base(NodeType.UrlNode)
+        { }
+
+        public string Url { get; set; }
+        public string Title { get; set; }
+    }
+
     enum NodeType
     {
         Heading,
@@ -78,6 +87,7 @@ namespace DokuWiki
         ParagraphNode,
         BoldText,
         ItalicText,
+        UnderlineText,
         InlineNoFormat,
         UrlNode,
         ImageNode

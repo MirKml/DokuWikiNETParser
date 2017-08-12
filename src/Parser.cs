@@ -11,7 +11,7 @@ namespace DokuWiki
         {
             var blockNodesParser = new BlockNodesParser();
             var blockNodes = blockNodesParser.GetNodes(wikiText);
-            
+
             // there aren't any blocks, consider whole text as one block and return it's nodes
             if (!blockNodes.Any() && !string.IsNullOrEmpty(wikiText))
             {
@@ -26,7 +26,7 @@ namespace DokuWiki
                 paragraphNode.Nodes.AddRange(nodes);
             }
 
-            return blockNodes; 
+            return blockNodes;
         }
     }
 
@@ -63,18 +63,35 @@ namespace DokuWiki
 
         protected virtual Node CreateNode(Match regExpMatch)
         {
-            var node = new Node(nodeType);
+            Node node;
+            switch (nodeType)
+            {
+                case NodeType.Code:
+                    node = new CodeNode();
+                    break;
+                case NodeType.ListNode:
+                    node = new ListNode();
+                    break;
+                case NodeType.UrlNode:
+                    node = new UrlNode();
+                    break;
+                default:
+                    node = new Node(nodeType);
+                    break;
+            }
+
             node.Content = regExpMatch.Groups[1].Value;
             node.StartPosition = regExpMatch.Index;
             node.EndPosition = node.StartPosition + regExpMatch.Value.Length - 1;
             return node;
         }
+
     }
 
     /// Heading element
     /// == Leve 1 header ===
     /// === Lever 2 header ===
-    /// ==== Level 3 header ==== 
+    /// ==== Level 3 header ====
     class HeadingParser : RegExpParser
     {
         // only two == are checked

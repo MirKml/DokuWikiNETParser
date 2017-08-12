@@ -21,7 +21,7 @@ namespace DokuWiki
 
         internal string Render(Node[] nodes)
         {
-            nodes.PrintNodes(true);
+            //nodes.PrintNodes(true);
             var stringBuilder = new StringBuilder();
             foreach (var node in nodes)
             {
@@ -52,7 +52,14 @@ namespace DokuWiki
                 case NodeType.PlainText:
                     if (!renderers.TryGetValue("plainText", out renderer))
                     {
-                        renderer = renderers["PlainText"] = new Renderer.PlainText();
+                        renderer = renderers["plainText"] = new Renderer.PlainText();
+                    }
+                    break;
+
+                case NodeType.UrlNode:
+                    if (!renderers.TryGetValue("url", out renderer))
+                    {
+                        renderer = renderers["url"] = new Renderer.Url();
                     }
                     break;
 

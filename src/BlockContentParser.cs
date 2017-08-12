@@ -4,8 +4,10 @@ using System.Linq;
 
 namespace DokuWiki
 {
+    /// <summary>
     /// Parses content of one block, mostly paragraph. Mostly it creates list of
     /// inline nodes e.g. emphasis text nodes, bold text nodes etc.
+    /// </summary>
     class BlockContentParser : NodeParser
     {
         internal override Node[] GetNodes(string wikiText)

@@ -20,6 +20,20 @@ namespace DokuWiki.Test
         }
 
         [TestMethod]
+        public void ConvertPlainWithItalic()
+        {
+           var wikiText = "Some plain text and //some italic text//";
+           Assert.AreEqual("Some plain text and <em>some italic text</em>", Converter.Convert(wikiText));
+        }
+
+        [TestMethod]
+        public void ConvertPlainWithUrl()
+        {
+           var wikiText = "This is url of my homepage: [[http://www.mirin.cz]]";
+           Assert.AreEqual("This is url of my homepage: <a href=\"http://www.mirin.cz\">http://www.mirin.cz</a>", Converter.Convert(wikiText));
+        }
+
+        [TestMethod]
         public void ConvertParagraphs()
         {
             var wikiText = @"První věta prního odstavce, není až tak dlouhá, ale už jí skončím.

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace DokuWiki.Renderer
 {
-    class BoldText: IRenderer
+    class BoldText : IRenderer
     {
         public string Render(Node node)
         {
@@ -15,7 +15,7 @@ namespace DokuWiki.Renderer
         }
     }
 
-    class ItalicText: IRenderer
+    class ItalicText : IRenderer
     {
         public string Render(Node node)
         {
@@ -23,7 +23,7 @@ namespace DokuWiki.Renderer
         }
     }
 
-    class PlainText: IRenderer
+    class PlainText : IRenderer
     {
         public string Render(Node node)
         {
@@ -31,11 +31,22 @@ namespace DokuWiki.Renderer
         }
     }
 
-    class InlineNoFormat: IRenderer
+    class InlineNoFormat : IRenderer
     {
         public string Render(Node node)
         {
             return $"<code>{NodeListRenderer.Sanitize(node.Content)}</code>";
+        }
+    }
+
+    class Url : IRenderer
+    {
+        public string Render(Node node)
+        {
+            var urlNode = (UrlNode)node;
+            return $"<a href=\"{urlNode.Url}\">"
+                + (string.IsNullOrEmpty(urlNode.Title) ? urlNode.Title : urlNode.Url)
+                + "</a>";
         }
     }
 }
