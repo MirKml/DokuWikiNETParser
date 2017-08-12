@@ -45,7 +45,7 @@ namespace DokuWiki.Renderer
         {
             var urlNode = (UrlNode)node;
             return $"<a href=\"{urlNode.Url}\">"
-                + (string.IsNullOrEmpty(urlNode.Title) ? urlNode.Title : urlNode.Url)
+                + (string.IsNullOrEmpty(urlNode.Title) ? urlNode.Url : urlNode.Title)
                 + "</a>";
         }
     }

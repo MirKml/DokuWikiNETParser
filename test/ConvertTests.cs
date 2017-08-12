@@ -34,6 +34,13 @@ namespace DokuWiki.Test
         }
 
         [TestMethod]
+        public void ConvertUrlWithTitle()
+        {
+           var wikiText = "[[http://www.mirin.cz|my homepage]]";
+           Assert.AreEqual("<a href=\"http://www.mirin.cz\">my homepage</a>", Converter.Convert(wikiText));
+        }
+
+        [TestMethod]
         public void ConvertParagraphs()
         {
             var wikiText = @"První věta prního odstavce, není až tak dlouhá, ale už jí skončím.
