@@ -38,11 +38,12 @@ namespace DokuWiki
         /// Checks if particular node is "inside" any of node list
         /// It's in sense of position in text.
         /// </summary>
-        public static bool IsInsideNodes(Node[] nodes, Node node)
+        internal static bool IsInsideNodes(Node[] nodes, Node node)
         {
             foreach (var itemNode in nodes)
             {
-                if (node.StartPosition >= itemNode.StartPosition && node.EndPosition <= itemNode.EndPosition)
+                if (itemNode != node
+                    && (node.StartPosition >= itemNode.StartPosition && node.EndPosition <= itemNode.EndPosition))
                 {
                     return true;
                 }

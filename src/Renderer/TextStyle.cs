@@ -5,21 +5,39 @@ namespace DokuWiki.Renderer
 {
     class BoldText : IRenderer
     {
+        private NodeListRenderer nodeListRenderer;
+
+        internal BoldText(NodeListRenderer nodeListRenderer)
+        {
+            this.nodeListRenderer = nodeListRenderer;
+        }
+
         public string Render(Node node)
         {
             string content = node.Nodes.Any()
-                ? new NodeListRenderer().Render(node.Nodes.ToArray())
-                : node.Content;
+                ? nodeListRenderer.Render(node.Nodes)
+                : NodeListRenderer.Sanitize(node.Content);
 
-            return $"<strong>{NodeListRenderer.Sanitize(content)}</strong>";
+            return $"<strong>{content}</strong>";
         }
     }
 
     class ItalicText : IRenderer
     {
+        private NodeListRenderer nodeListRenderer;
+
+        internal ItalicText(NodeListRenderer nodeListRenderer)
+        {
+            this.nodeListRenderer = nodeListRenderer;
+        }
+
         public string Render(Node node)
         {
-            return $"<em>{NodeListRenderer.Sanitize(node.Content)}</em>";
+            string content = node.Nodes.Any()
+                ? nodeListRenderer.Render(node.Nodes)
+                : NodeListRenderer.Sanitize(node.Content);
+
+            return $"<em>{content}</em>";
         }
     }
 
@@ -49,5 +67,4 @@ namespace DokuWiki.Renderer
                 + "</a>";
         }
     }
-
 }

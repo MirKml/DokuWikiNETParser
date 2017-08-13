@@ -35,25 +35,24 @@ namespace DokuWiki.Renderer
     /// </summary>
     class Paragraph : IRenderer
     {
+        private NodeListRenderer nodeListRenderer;
+
+        internal Paragraph(NodeListRenderer nodeListRenderer)
+        {
+            this.nodeListRenderer = nodeListRenderer;
+        }
+
         public string Render(Node node)
         {
-            if (node.Nodes.Any())
-            {
-                var nodeListRenderer = new NodeListRenderer();
-                var nodeListContent = nodeListRenderer.Render(node.Nodes.ToArray());
-                if (!nodeListContent.EndsWith("\n"))
-                {
-                    nodeListContent += "\n";
-                }
-                return "<p>\n" + nodeListContent + "</p>\n";
-            }
+            string content = node.Nodes.Any()
+                ? nodeListRenderer.Render(node.Nodes)
+                : NodeListRenderer.Sanitize(node.Content);
 
-            var nodeContent = node.Content;
-            if (!nodeContent.EndsWith("\n"))
+            if (!content.EndsWith("\n"))
             {
-                nodeContent += "\n";
+                content += "\n";
             }
-            return "<p>\n" + nodeContent + "</p>\n";
+            return "<p>\n" + content + "</p>\n";
         }
     }
 

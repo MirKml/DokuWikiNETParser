@@ -12,27 +12,20 @@ namespace DokuWiki
     {
         internal override Node[] GetNodes(string wikiText)
         {
+            var parsers = new NodeParser[]
+            {
+                new NoFormattingParser(),
+                new UrlNodeParser(),
+                new ImageNodeParser(),
+                new BoldTextParser(),
+                new ItalicTextParser()
+            };
+
             var allNodes = new List<Node>();
-
-            var noFormattingParser = new NoFormattingParser();
-            var noFormattedNodes = noFormattingParser.GetNodes(wikiText);
-            allNodes.AddRange(noFormattedNodes);
-
-            var urlLinkParser = new UrlNodeParser();
-            var urlLinkNodes = urlLinkParser.GetNodes(wikiText).Where(n => !Node.IsInsideNodes(allNodes.ToArray(), n)).ToList();
-            allNodes.AddRange(urlLinkNodes);
-
-            var imageNodeParser = new ImageNodeParser();
-            var imageNodes = imageNodeParser.GetNodes(wikiText).Where(n => !Node.IsInsideNodes(allNodes.ToArray(), n)).ToList();
-            allNodes.AddRange(imageNodes);
-
-            var boldTextParser = new BoldTextParser();
-            var boldTextNodes = boldTextParser.GetNodes(wikiText).Where(n => !Node.IsInsideNodes(allNodes.ToArray(), n)).ToList();
-            allNodes.AddRange(boldTextNodes);
-
-            var italicTextParser = new ItalicTextParser();
-            var italicTextNodes = italicTextParser.GetNodes(wikiText).Where(n => !Node.IsInsideNodes(allNodes.ToArray(), n)).ToList(); ;
-            allNodes.AddRange(italicTextNodes);
+            foreach (var parser in parsers)
+            {
+                allNodes.AddRange(parser.GetNodes(wikiText));
+            }
 
             // there are no other nodes, it means whole text is just one plain text node, which is the Content
             // property of current paragraph node, so we can return empty array
@@ -40,6 +33,8 @@ namespace DokuWiki
             {
                 return allNodes.ToArray();
             }
+
+            FixNesting(allNodes);
 
             // any text which isn't in any other node is text in plain text nodes
             var plainTextParser = new PlainTextParser(allNodes);
@@ -50,22 +45,55 @@ namespace DokuWiki
             return allNodes.ToArray();
         }
 
-        internal static void ParseNestedContent(Node node)
+        static void FixNesting(List<Node> nodes)
         {
-            var boldTextParser = new BoldTextParser();
-            var boldTextNodes = boldTextParser.GetNodes(node.Content);
-            if (boldTextNodes.Any())
+            // adjust nesting of nodes depends on sorting asc according start position
+            nodes.Sort((x, y) => x.StartPosition.CompareTo(y.StartPosition));
+            Node previousNode = null;
+            foreach (var node in nodes.ToList())
             {
-                node.Nodes.AddRange(boldTextNodes);
-            }
-
-            var italicTextParser = new ItalicTextParser();
-            var italicTextNodes = italicTextParser.GetNodes(node.Content);
-            if (boldTextNodes.Any())
-            {
-                node.Nodes.AddRange(boldTextNodes);
+                if (previousNode == null)
+                {
+                    previousNode = node;
+                    continue;
+                }
+                if (node.StartPosition < previousNode.EndPosition)
+                {
+                    nodes.Remove(node);
+                    ParseNestedContent(previousNode);
+                }
             }
         }
 
+        private static void ParseNestedContent(Node node)
+        {
+            var parsers = new NodeParser[]
+            {
+                new NoFormattingParser(),
+                new BoldTextParser(),
+                new ItalicTextParser()
+            };
+
+            var nodes = new List<Node>();
+            foreach (var parser in parsers)
+            {
+                nodes.AddRange(parser.GetNodes(node.Content));
+            }
+
+            if (!nodes.Any())
+            {
+                throw new InvalidOperationException("there is no nested nodes, don't call ParseNestedContent method");
+            }
+
+            FixNesting(nodes);
+
+            // any text which isn't in any other node is text in plain text nodes
+            var plainTextParser = new PlainTextParser(nodes);
+            var plainTextNodes = plainTextParser.GetNodes(node.Content);
+            nodes.AddRange(plainTextNodes);
+
+            nodes.Sort((x, y) => x.StartPosition.CompareTo(y.StartPosition));
+            node.Nodes = nodes;
+        }
     }
 }

@@ -31,6 +31,11 @@ namespace DokuWiki
             return stringBuilder.ToString();
         }
 
+        internal string Render(List<Node> nodes)
+        {
+            return Render(nodes.ToArray());
+        }
+
         private IRenderer GetRenderer(NodeType type)
         {
             IRenderer renderer;
@@ -39,14 +44,14 @@ namespace DokuWiki
                 case NodeType.BoldText:
                     if (!renderers.TryGetValue("boldText", out renderer))
                     {
-                        renderer = renderers["boldText"] = new Renderer.BoldText();
+                        renderer = renderers["boldText"] = new Renderer.BoldText(this);
                     }
                     break;
 
                 case NodeType.ItalicText:
                     if (!renderers.TryGetValue("italicText", out renderer))
                     {
-                        renderer = renderers["italicText"] = new Renderer.ItalicText();
+                        renderer = renderers["italicText"] = new Renderer.ItalicText(this);
                     }
                     break;
 
@@ -81,7 +86,7 @@ namespace DokuWiki
                 case NodeType.ParagraphNode:
                     if (!renderers.TryGetValue("paragraph", out renderer))
                     {
-                        renderer = renderers["paragraph"] = new Renderer.Paragraph();
+                        renderer = renderers["paragraph"] = new Renderer.Paragraph(this);
                     }
                     break;
 

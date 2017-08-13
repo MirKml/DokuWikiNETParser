@@ -25,5 +25,18 @@ namespace DokuWiki.Test
            var wikiText = "Some plain text and //some italic text//";
            Assert.AreEqual("Some plain text and <em>some italic text</em>", Converter.Convert(wikiText));
         }
+
+        [TestMethod]
+        public void ConvertItalicBoldInside()
+        {
+           var wikiText = "Some //italic text **with bold inside**//";
+           Assert.AreEqual("Some <em>italic text <strong>with bold inside</strong></em>", Converter.Convert(wikiText));
+        }
+
+        public void ConvertItalicBoldStartInside()
+        {
+           var wikiText = "//**bold inside** italic//";
+           Assert.AreEqual("<em><strong>bold inside<strong> italic</em>", Converter.Convert(wikiText));
+        }
     }
 }
