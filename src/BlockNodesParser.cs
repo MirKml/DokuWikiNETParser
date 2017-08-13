@@ -27,8 +27,8 @@ namespace DokuWiki
 
             var paragraphParser = new ParagraphParser();
             var paragraphNodes = paragraphParser.GetNodes(wikiText);
-            paragraphNodes = paragraphNodes.Where(n => !Node.IsInsideNodes(codeNodes, n)).ToArray(); 
-            paragraphNodes = FilterListParagrahs(paragraphNodes, listBlocks); 
+            paragraphNodes = paragraphNodes.Where(n => !Node.IsInsideNodes(codeNodes, n)).ToArray();
+            paragraphNodes = FilterListParagrahs(paragraphNodes, listBlocks);
             RemoveHeadings(paragraphNodes, headingNodes, wikiText);
             blockNodes.AddRange(paragraphNodes);
 
@@ -44,8 +44,8 @@ namespace DokuWiki
                 {
                     if (headingNode.EndPosition > paragraphNode.StartPosition && headingNode.EndPosition < paragraphNode.EndPosition)
                     {
-                        // add '2', because there is one LF after the end of heading and next character is start of the paragraph
-                        paragraphNode.StartPosition = headingNode.EndPosition + 2;
+                        // add '1', because there is one LF after the end of heading and next character is start of the paragraph
+                        paragraphNode.StartPosition = headingNode.EndPosition + 1;
                         paragraphNode.Content = wikiText.Substring(paragraphNode.StartPosition, paragraphNode.EndPosition - paragraphNode.StartPosition);
                     }
                 }
@@ -54,7 +54,7 @@ namespace DokuWiki
 
         private static Node[] FilterListParagrahs(Node[] paragraphNodes, List<Node> listBlocks)
         {
-            var filteredParagraphNodes = paragraphNodes.Where( pn => 
+            var filteredParagraphNodes = paragraphNodes.Where( pn =>
             {
                 return !listBlocks.Any(ln => ln.StartPosition >= pn.StartPosition && ln.EndPosition <= pn.EndPosition);
             }).ToArray();

@@ -56,6 +56,9 @@ namespace DokuWiki
         public CodeNode() : base(NodeType.Code)
         { }
 
+        /// <summary>
+        /// Determines the code language e.g. PHP, C++, etc.
+        /// </summary>
         public string LanguageIdentifier { get; set; }
     }
 

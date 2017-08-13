@@ -82,7 +82,7 @@ namespace DokuWiki
 
             node.Content = regExpMatch.Groups[1].Value;
             node.StartPosition = regExpMatch.Index;
-            node.EndPosition = node.StartPosition + regExpMatch.Value.Length - 1;
+            node.EndPosition = node.StartPosition + regExpMatch.Value.Length;
             return node;
         }
 
@@ -101,24 +101,29 @@ namespace DokuWiki
         { }
     }
 
-    ///
-    /// Code block element
-    /// <code php>
+    /// <summary>
+    /// Code block element parser for code wiki elements. E.g.
+    /// &lt;code php&gt;
     /// if (empty($this->transaction['transactionProducts'])) {
     ///    $this->transaction['transactionProducts'] = array();
     /// }
-    /// </code>
+    /// &amp;lt;/code&gt;
+    /// </summary>
     class CodeBlockParser : RegExpParser
     {
-        private const string regExp = "\n<code([^>]*)>(?s:(.*?))<\\/code>";
+        private const string regExp = "(?:\n|^)<code([^>]*)>(?s:(.*?))<\\/code>";
 
         internal CodeBlockParser() : base(regExp, NodeType.Code)
         { }
 
         protected override Node CreateNode(Match regExpMatch)
         {
-            var node = base.CreateNode(regExpMatch);
+            var node = (CodeNode)base.CreateNode(regExpMatch);
             node.Content = regExpMatch.Groups[2].Value;
+            if (regExpMatch.Groups[1].Success)
+            {
+                node.LanguageIdentifier = regExpMatch.Groups[1].Value.Trim();
+            }
             return node;
         }
     }
