@@ -21,7 +21,8 @@ namespace DokuWiki
 
         internal string Render(Node[] nodes)
         {
-            nodes.PrintNodes(true);
+            // for debug purposes:
+            // nodes.PrintNodes(true);
             var stringBuilder = new StringBuilder();
             foreach (var node in nodes)
             {
@@ -67,6 +68,20 @@ namespace DokuWiki
                     if (!renderers.TryGetValue("code", out renderer))
                     {
                         renderer = renderers["code"] = new Renderer.Code();
+                    }
+                    break;
+
+                case NodeType.Heading:
+                    if (!renderers.TryGetValue("heading", out renderer))
+                    {
+                        renderer = renderers["heading"] = new Renderer.Heading();
+                    }
+                    break;
+
+                case NodeType.ParagraphNode:
+                    if (!renderers.TryGetValue("paragraph", out renderer))
+                    {
+                        renderer = renderers["paragraph"] = new Renderer.Paragraph();
                     }
                     break;
 

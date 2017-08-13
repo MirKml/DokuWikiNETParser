@@ -71,13 +71,21 @@ namespace DokuWiki
         public int Level { get; set; }
     }
 
-    class UrlNode: Node
+    class UrlNode : Node
     {
         public UrlNode() : base(NodeType.UrlNode)
         { }
 
         public string Url { get; set; }
         public string Title { get; set; }
+    }
+
+    class HeadingNode : Node
+    {
+        public HeadingNode() : base(NodeType.Heading)
+        { }
+
+        public int Level { get; set;}
     }
 
     enum NodeType

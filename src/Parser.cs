@@ -75,6 +75,9 @@ namespace DokuWiki
                 case NodeType.UrlNode:
                     node = new UrlNode();
                     break;
+                case NodeType.Heading:
+                    node = new HeadingNode();
+                    break;
                 default:
                     node = new Node(nodeType);
                     break;
@@ -88,17 +91,28 @@ namespace DokuWiki
 
     }
 
-    /// Heading element
-    /// == Leve 1 header ===
-    /// === Lever 2 header ===
-    /// ==== Level 3 header ====
+    /// <summary>
+    /// Parses wiki heading elements:
+    ///  == Level 1 header ===
+    ///  === Level 2 header ===
+    ///  ==== Level 3 header ====
+    /// </summary>
     class HeadingParser : RegExpParser
     {
         // only two == are checked
-        private const string regExp = "\n={2,}[ ]+([^=]+)[ ]+={2,}";
+        private const string regExp = "(?:\n|^)(={2,})[ ]+([^=]+)[ ]+={2,}";
 
         internal HeadingParser() : base(regExp, NodeType.Heading)
         { }
+
+        protected override Node CreateNode(Match regExpMatch)
+        {
+            var node = (HeadingNode)base.CreateNode(regExpMatch);
+            node.Content = regExpMatch.Groups[2].Value;
+            // heading level is number of '=' characters - 1
+            node.Level = regExpMatch.Groups[1].Value.Length - 1;
+            return node;
+        }
     }
 
     /// <summary>

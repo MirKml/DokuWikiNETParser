@@ -50,19 +50,4 @@ namespace DokuWiki.Renderer
         }
     }
 
-    /// <summary>
-    /// Renders the HTML markup for programing code blocks. It suppose usage of https://highlightjs.org
-    /// Javascript highlighter.
-    /// </summary>
-    class Code : IRenderer
-    {
-        public string Render(Node node)
-        {
-            var codeNode = (CodeNode)node;
-            return "<pre><code"
-                + (!string.IsNullOrEmpty(codeNode.LanguageIdentifier) ? $" class=\"{codeNode.LanguageIdentifier}\">" : ">")
-                + codeNode.Content
-                + "</code></pre>";
-        }
-    }
 }
