@@ -8,10 +8,10 @@ build
 
 running tests
 
-    cd tests
+    cd test
     dotnet test
 
 running only particular test by method name
 
-    cd tests
+    cd test
     dotnet test --filter Name~UrlWithTitle
