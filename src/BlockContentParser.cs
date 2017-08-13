@@ -45,7 +45,7 @@ namespace DokuWiki
             return allNodes.ToArray();
         }
 
-        static void FixNesting(List<Node> nodes)
+        private static void FixNesting(List<Node> nodes)
         {
             // adjust nesting of nodes depends on sorting asc according start position
             nodes.Sort((x, y) => x.StartPosition.CompareTo(y.StartPosition));
