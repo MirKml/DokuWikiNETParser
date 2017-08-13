@@ -98,7 +98,14 @@ namespace DokuWiki
 
         internal static string Sanitize(string text)
         {
-            return WebUtility.HtmlEncode(text);
+            var stringBuilder = new StringBuilder(text);
+            return stringBuilder
+                .Replace("&", "&amp;")
+                .Replace("<", "&lt;")
+                .Replace(">", "&gt;")
+                .Replace("\"", "&quot;")
+                .Replace("'", "&apos;")
+                .ToString();
         }
     }
 }

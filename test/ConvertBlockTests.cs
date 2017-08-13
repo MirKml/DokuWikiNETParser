@@ -73,7 +73,7 @@ Tohle je začátek čtvrtého odstavce, první věta.
 A odřádkovaná druhá věta ale pořád čtvrtý odstavec.";
             Assert.AreEqual(@"<p>
 První věta prního odstavce, není až tak dlouhá, ale už jí skončím.
-Tohle je druhá věta, ""odřádkovaná"" jedním EOL, ale stále je v prvním odstavci.
+Tohle je druhá věta, &quot;odřádkovaná&quot; jedním EOL, ale stále je v prvním odstavci.
 </p>
 <h3>Nadpis druhého odstavce</h3>
 <p>
