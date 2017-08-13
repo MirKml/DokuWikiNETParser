@@ -93,7 +93,9 @@ namespace DokuWiki
         Heading,
         PlainText,
         Code,
+        /// <summary>one item in <see cref="NodeType.ListBlock"/> block</summary>
         ListNode,
+        /// <summary>List of <see cref="NodeType.ListNode"/> items</summary>
         ListBlock,
         ParagraphNode,
         BoldText,

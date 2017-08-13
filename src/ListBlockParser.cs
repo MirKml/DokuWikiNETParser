@@ -18,6 +18,10 @@ namespace DokuWiki
             return node;
         }
 
+        /// <summary>
+        /// Joins the wiki list item nodes which belong to same block into new one node - item list block.
+        /// <returns>List of blocks, each block contains list of items.</returns>
+        /// </summary>
         internal static List<Node> JoinListItems(Node[] nodes, string wikiText)
         {
             var nodeList = new List<Node>(nodes);
@@ -30,7 +34,7 @@ namespace DokuWiki
                 var nodeItem = nodeList[i];
                 if (i == 0)
                 {
-                    // start position is line ending, so add to one character
+                    // start position is line ending, so add one character
                     currentBlock.StartPosition = nodeItem.StartPosition + 1;
                     currentBlock.EndPosition = nodeItem.EndPosition;
                     currentBlock.Nodes.Add(nodeItem);
@@ -48,7 +52,7 @@ namespace DokuWiki
                     else
                     {
                         currentBlock = new Node(NodeType.ListBlock);
-                        // start position is line ending, so add to one character
+                        // start position is line ending, so add one character
                         currentBlock.StartPosition = nodeItem.StartPosition + 1;
                         currentBlock.EndPosition = nodeItem.StartPosition;
                         currentBlock.Nodes.Add(nodeItem);
