@@ -11,18 +11,23 @@ namespace DokuWiki
         internal ListBlockParser() : base(regExp, NodeType.ListNode)
         { }
 
+        /// <returns>return <see cref="ListNode" /> instances</returns>
         protected override Node CreateNode(Match regExpMatch)
         {
             var node = (ListNode)base.CreateNode(regExpMatch);
             node.Content = regExpMatch.Groups[2].Value;
             node.Level = regExpMatch.Groups[1].Value.Length / 2;
+
+            // content of the node can contain some inline nodes, e.g. bold text etc.
+            var blockContentParser = new BlockContentParser();
+            node.Nodes = blockContentParser.GetNodes(node.Content).ToList();
             return node;
         }
 
         /// <summary>
         /// Joins the wiki list item nodes which belong to same block into new one node - item list block.
-        /// <returns>List of blocks, each block contains list of items.</returns>
         /// </summary>
+        /// <returns>List of blocks, each block contains list of items.</returns>
         internal static List<Node> JoinListItems(Node[] nodes, string wikiText)
         {
             var nodeList = new List<Node>(nodes);

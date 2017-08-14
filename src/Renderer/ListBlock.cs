@@ -5,6 +5,13 @@ namespace DokuWiki.Renderer
 {
     class ListBlock : IRenderer
     {
+        private NodeListRenderer nodeListRenderer;
+
+        internal ListBlock(NodeListRenderer nodeListRenderer)
+        {
+            this.nodeListRenderer = nodeListRenderer;
+        }
+
         public string Render(Node node)
         {
             if (node.Nodes == null || !node.Nodes.Any())
@@ -28,7 +35,11 @@ namespace DokuWiki.Renderer
                     content += spaceIndent + " </ul>\n";
                 }
 
-                content += spaceIndent + " <li>" + listNode.Content + "</li>\n";
+                var nodeContent = listNode.Nodes.Any()
+                    ? nodeListRenderer.Render(listNode.Nodes)
+                    : NodeListRenderer.Sanitize(listNode.Content);
+
+                content += spaceIndent + " <li>" + nodeContent + "</li>\n";
                 currentLevel = listNode.Level > 1 ? listNode.Level : 1;
             }
 

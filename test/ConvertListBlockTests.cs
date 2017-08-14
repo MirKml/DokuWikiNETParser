@@ -64,5 +64,20 @@ namespace DokuWiki.Test
 "
                 , Converter.Convert(wikiText));
         }
+
+        [TestMethod]
+        public void ConvertListBlockWithInlineMarkup()
+        {
+            var wikiText = @"
+  * This is **the bold** 1st item 1st level
+  * This is a 2nd item 1st level";
+
+            Assert.AreEqual(@"<ul>
+ <li>This is <strong>the bold</strong> 1st item 1st level</li>
+ <li>This is a 2nd item 1st level</li>
+</ul>
+"
+                , Converter.Convert(wikiText));
+        }
     }
 }

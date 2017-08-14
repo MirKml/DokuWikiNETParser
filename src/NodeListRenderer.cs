@@ -92,7 +92,7 @@ namespace DokuWiki
                 case NodeType.ListBlock:
                     if (!renderers.TryGetValue("listBlock", out renderer))
                     {
-                        renderer = renderers["listBlock"] = new Renderer.ListBlock();
+                        renderer = renderers["listBlock"] = new Renderer.ListBlock(this);
                     }
                     break;
 
