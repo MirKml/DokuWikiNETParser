@@ -6,15 +6,16 @@ namespace DokuWiki
 {
     class ListBlockParser : RegExpParser
     {
-        private const string regExp = "\n[ \t]+([*-]+) ([^\n]*)";
+        private const string regExp = "(?:\n|^)([ ]+)[*-] ([^\n]*)";
 
         internal ListBlockParser() : base(regExp, NodeType.ListNode)
         { }
 
         protected override Node CreateNode(Match regExpMatch)
         {
-            var node = base.CreateNode(regExpMatch);
+            var node = (ListNode)base.CreateNode(regExpMatch);
             node.Content = regExpMatch.Groups[2].Value;
+            node.Level = regExpMatch.Groups[1].Value.Length / 2;
             return node;
         }
 
@@ -66,6 +67,7 @@ namespace DokuWiki
             {
                 foreach (var listBlock in listBlocks)
                 {
+
                     listBlock.Content = wikiText.Substring(listBlock.StartPosition, listBlock.EndPosition - listBlock.StartPosition);
                 }
             }

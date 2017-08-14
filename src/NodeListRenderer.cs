@@ -89,6 +89,13 @@ namespace DokuWiki
                     }
                     break;
 
+                case NodeType.ListBlock:
+                    if (!renderers.TryGetValue("listBlock", out renderer))
+                    {
+                        renderer = renderers["listBlock"] = new Renderer.ListBlock();
+                    }
+                    break;
+
                 default:
                     throw new NotSupportedException("rendering for the node type " + type + " isn't supported");
             }
