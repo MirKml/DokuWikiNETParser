@@ -46,5 +46,16 @@ namespace DokuWiki.Test
             Assert.AreEqual("<img src=\"https://www.example-test.com/images/bla11/dokuwiki-128.png\" class=\"media-center\">", Converter.Convert(wikiText, configuration));
         }
 
+        public void ConvertExternalImageWithRightAlignTitle()
+        {
+            var wikiText = "{{ https://www.example-test.com/images/bla11/dokuwiki-128.png | Some title with czech charch řčš and dash -}}";
+            var configuration = new ConverterConfiguration();
+            configuration.ImageRightAlignCssClass = "media-right";
+            Assert.AreEqual("<img src=\"https://www.example-test.com/images/bla11/dokuwiki-128.png\""
+                + " class=\"media-right\""
+                + " title=\"Some title with czech charch řčš and dash -\">", Converter.Convert(wikiText, configuration));
+        }
+
+
     }
 }

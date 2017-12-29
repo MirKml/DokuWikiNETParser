@@ -10,11 +10,13 @@ namespace DokuWiki
     //
     //  with external url, rezise, right align
     //  {{https://www.server.com/images/dokuwiki-128.png?200x50 }}
+    //
+    //  with external url, rezise, right align, title
+    //  {{https://www.server.com/images/dokuwiki-128.png?200x50 |Some image title with dash -}}
     /// </summary>
     class ImageNodeParser : RegExpParser
     {
-
-        private const string regExp = "\\{\\{( ?(wiki:|https?://)([\\w\\./-]+)(\\?[0-9]+(?:x[0-9]+)?)? ?)\\}\\}";
+        private const string regExp = "\\{\\{( ?(wiki:|https?://)([\\w\\./-]+)(\\?[0-9]+(?:x[0-9]+)?)? ?(|[\\w -]+)?)\\}\\}";
 
         public ImageNodeParser() : base(regExp, NodeType.ImageNode)
         { }
@@ -25,6 +27,7 @@ namespace DokuWiki
             var wikiOrHttpPart = regExpMatch.Groups[2].Value;
             var imageNamePart = regExpMatch.Groups[3].Value;
             var sizePart = regExpMatch.Groups[4].Value;
+            var titlePart = regExpMatch.Groups[5].Value;
 
             node.IsInternal = wikiOrHttpPart.StartsWith("wiki:");
 
@@ -45,7 +48,7 @@ namespace DokuWiki
 
             node.HasRightAlign = node.Content.StartsWith(" ");
             node.HasLeftAlign = node.Content.EndsWith(" ");
-
+            node.Title = titlePart;
             return node;
         }
     }

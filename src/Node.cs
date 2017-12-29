@@ -100,6 +100,7 @@ namespace DokuWiki
         public bool HasRightAlign { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+        public string Title { get; set; }
     }
 
     enum NodeType

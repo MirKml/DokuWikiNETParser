@@ -38,6 +38,7 @@ namespace DokuWiki.Renderer
                 + (!string.IsNullOrWhiteSpace(cssClass) ? $" class=\"{cssClass}\"" : "")
                 + (imageNode.Width > 0 ? $" width=\"{imageNode.Width}\"" : "")
                 + (imageNode.Height > 0 ? $" height=\"{imageNode.Height}\"" : "")
+                + (!string.IsNullOrEmpty(imageNode.Title) ? $" title=\"{imageNode.Title} alt=\"{imageNode.Title}\"" : "")
                 + ">";
         }
     }
