@@ -120,11 +120,11 @@ namespace DokuWiki
 
     /// <summary>
     /// Code block element parser for code wiki elements. E.g.
-    /// &lt;code php&gt;
+    /// <code php>
     /// if (empty($this->transaction['transactionProducts'])) {
     ///    $this->transaction['transactionProducts'] = array();
     /// }
-    /// &amp;lt;/code&gt;
+    /// </code>
     /// </summary>
     class CodeBlockParser : RegExpParser
     {
@@ -143,6 +143,25 @@ namespace DokuWiki
             }
             return node;
         }
+    }
+
+    /// <summary>
+    /// One line code block, its one line of text with indenting at least 2 spaces e.g.
+    /// "  code block"
+    /// </summary>
+    class OneLineCodeBlockParser : RegExpParser
+    {
+        ///<summary>
+        /// It's little bit tricky, because we need to exclude lines for lists e.g.
+        /// "   * line item"
+        /// It's necessery to add "space" into list of "not starting characters - [^ *-]. Without space, as "[^*-]" - because of backtracking,
+        /// string "   * line" is matched, because {2,} matched at the end 2 spaces and [^*-] matched third space.
+        //  Next possibility is disable backtracking for {2,} group
+        ///</summary>
+        private const string regExp = "(?:\n|^) {2,}([^ *-].*)";
+
+        internal OneLineCodeBlockParser() : base(regExp, NodeType.Code)
+        { }
     }
 
 }
