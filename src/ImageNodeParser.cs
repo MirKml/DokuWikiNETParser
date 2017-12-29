@@ -38,7 +38,7 @@ namespace DokuWiki
                 node.Width = int.Parse(sizeMatch.Groups[1].Value);
                 node.Height = int.Parse(sizeMatch.Groups[2].Value);
             }
-            else
+            else if (!string.IsNullOrEmpty(sizePart))
             {
                 node.Width = int.Parse(sizePart.Substring(1));
             }

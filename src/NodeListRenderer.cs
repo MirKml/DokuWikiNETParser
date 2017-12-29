@@ -18,6 +18,11 @@ namespace DokuWiki
             renderers = new Dictionary<string, IRenderer>();
         }
 
+        public string ImagesBaseUrl { private get; set; }
+        public string ImageLeftAlignCssClass { private get; set; }
+        public string ImageRightAlignCssClass { private get; set; }
+        public string ImageCenterAlignCssClass { private get; set; }
+
         internal string Render(Node[] nodes)
         {
             // for debug purposes:
@@ -93,6 +98,17 @@ namespace DokuWiki
                     if (!renderers.TryGetValue("listBlock", out renderer))
                     {
                         renderer = renderers["listBlock"] = new Renderer.ListBlock(this);
+                    }
+                    break;
+
+                case NodeType.ImageNode:
+                    if (!renderers.TryGetValue("image", out renderer))
+                    {
+                        var imageRenderer = new Renderer.Image(ImagesBaseUrl);
+                        imageRenderer.LeftAlignCssClass = ImageLeftAlignCssClass;
+                        imageRenderer.RightAlignCssClass = ImageRightAlignCssClass;
+                        imageRenderer.CenterAlignCssClass = ImageCenterAlignCssClass;
+                        renderer = renderers["image"] = (IRenderer)imageRenderer;
                     }
                     break;
 
