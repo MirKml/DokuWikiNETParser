@@ -78,6 +78,9 @@ namespace DokuWiki
                 case NodeType.Heading:
                     node = new HeadingNode();
                     break;
+                case NodeType.ImageNode:
+                    node = new ImageNode();
+                    break;
                 default:
                     node = new Node(nodeType);
                     break;

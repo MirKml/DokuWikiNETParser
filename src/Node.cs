@@ -86,7 +86,20 @@ namespace DokuWiki
         public HeadingNode() : base(NodeType.Heading)
         { }
 
-        public int Level { get; set;}
+        public int Level { get; set; }
+    }
+
+    class ImageNode : Node
+    {
+        public ImageNode() : base(NodeType.ImageNode)
+        { }
+
+        public bool IsInternal { get; set; }
+        public string ImageName { get; set; }
+        public bool HasLeftAlign { get; set; }
+        public bool HasRightAlign { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
     }
 
     enum NodeType
