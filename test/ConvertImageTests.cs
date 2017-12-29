@@ -15,10 +15,36 @@ namespace DokuWiki.Test
         }
 
         [TestMethod]
-        public void ConvertExternalImage()
+        public void ConvertExternalImageWithResize()
         {
             var wikiText = "{{https://www.example-test.com/images/bla11/dokuwiki-128.png?200x29}}";
             Assert.AreEqual("<img src=\"https://www.example-test.com/images/bla11/dokuwiki-128.png\" width=\"200\" height=\"29\">", Converter.Convert(wikiText));
         }
+
+        [TestMethod]
+        public void ConvertExternalImageWithRightAlign()
+        {
+            var wikiText = "{{ https://www.example-test.com/images/bla11/dokuwiki-128.png}}";
+            var configuration = new ConverterConfiguration();
+            configuration.ImageRightAlignCssClass = "media-right";
+            Assert.AreEqual("<img src=\"https://www.example-test.com/images/bla11/dokuwiki-128.png\" class=\"media-right\">", Converter.Convert(wikiText, configuration));
+        }
+
+        public void ConvertExternalImageWithLeftAlign()
+        {
+            var wikiText = "{{https://www.example-test.com/images/bla11/dokuwiki-128.png }}";
+            var configuration = new ConverterConfiguration();
+            configuration.ImageLeftAlignCssClass = "media-left";
+            Assert.AreEqual("<img src=\"https://www.example-test.com/images/bla11/dokuwiki-128.png\" class=\"media-left\">", Converter.Convert(wikiText, configuration));
+        }
+
+        public void ConvertExternalImageWithCenterAlign()
+        {
+            var wikiText = "{{ https://www.example-test.com/images/bla11/dokuwiki-128.png }}";
+            var configuration = new ConverterConfiguration();
+            configuration.ImageCenterAlignCssClass = "media-center";
+            Assert.AreEqual("<img src=\"https://www.example-test.com/images/bla11/dokuwiki-128.png\" class=\"media-center\">", Converter.Convert(wikiText, configuration));
+        }
+
     }
 }
