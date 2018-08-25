@@ -66,6 +66,13 @@ namespace DokuWiki
                     }
                     break;
 
+                case NodeType.InlineNoFormat:
+                    if (!renderers.TryGetValue("inlineNoFormat", out renderer))
+                    {
+                        renderer = renderers["inlineNoFormat"] = new Renderer.InlineNoFormat();
+                    }
+                    break;
+
                 case NodeType.UrlNode:
                     if (!renderers.TryGetValue("url", out renderer))
                     {

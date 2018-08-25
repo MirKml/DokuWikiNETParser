@@ -49,6 +49,10 @@ namespace DokuWiki.Renderer
         }
     }
 
+    /// <summary>
+    /// Renders inline text without any formatting. For backward compatibility, it renders
+    /// the text inside "code" element.
+    /// </summary>
     class InlineNoFormat : IRenderer
     {
         public string Render(Node node)
