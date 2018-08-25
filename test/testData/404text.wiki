@@ -25,7 +25,7 @@ K logám - to je další věc - je sice fajn jak loguje Tracy, ale co když nast
 Bohužel Tracy se nedrží toho, že by respektovala //error_log// direktivu PHP, naopak ji potlačuje. Určitě by mě přišlo vhodné, aby Tracy respektovala //error_log// a posílala tak chyby dále do standarního PHP logu. Onehdá jsme na to měli do Tracy nějaké patche, ale s přechodem na Sentry v produkci jsme je zrušili a do Sentry se nám podařilo prosadit [[https://github.com/getsentry/sentry-php/issues/177|změny]], které logují chyby do PHP logu.
 
 ===== Více možností ošetření chyb 404 ====
-Pokud máte rozsáhlejší aplikaci, tak máte v zásadě dvě možnosti, jak ošetřovat chyby 404, obecně jakékoli jiné než 500. 
+Pokud máte rozsáhlejší aplikaci, tak máte v zásadě dvě možnosti, jak ošetřovat chyby 404, obecně jakékoli jiné než 500.
 
   * vyhozením výjimky - typicky %%Application\BadRequestException%% pro 404
   * forwardováním na specifický ErrorPresenter
@@ -41,23 +41,6 @@ Tyto specifické ErrorPresenty jsou ale dost často zdrojem chyb, protože použ
 ErrorPresentery si také zaslouží trochu více pozornosti. První věc je, že ten [[https://github.com/nette/sandbox/blob/3b30090ae000ba940099b293cab6b6bab5e22e90/app/presenters/ErrorPresenter.php|sandboxový]], ze kterého budete vycházet, se mi zdá nějaký podivný, např. nedědí od %%UI\Presenter%%, nemá svou šablonu, jen phtml soubor a všechny 4xx výjimky posílá na další presentery.
 Cílem asi je mít obsluhu chyby 500 - fatální selhání aplikace - opravdu co nejrychleji a nejbezpečněji odbavené, i když ten forward rozhodně není jednoduchá záležitost. Jednodušší řešení mi přijde mít jeden klasický ErrorPresenter s renderdefault metodou, kde se podle výjimky, která přijde v parametru %%exception%%, rozhodneme pro šablonu a tu vykreslíme. Nemusíme nic forwardovat a máme k dispozici latte i pro chybu 500.
 
-<code php>
-public function addItem($sku, $name, $price, $category = null, $quantity = 1) {
- $product = array();
- foreach (array('sku', 'name', 'category', 'price', 'quantity') as $arg) {
-  if ($$arg !== null) {
-   $product[$arg] = $$arg;
-  }
- }
-
- if (empty($this->transaction['transactionProducts'])) {
-  $this->transaction['transactionProducts'] = array();
- }
- $this->transaction['transactionProducts'][] = $product;
- return $this;
-}
-</code>
-
 Pak je tu další nepříjemná věc, která platí jak pro hlavní ErrorPresenter, tak pro případné specifické **neumějí obsloužit url pro signály**. Nevím tedy jak je to v aktuálním Nette 2.4, ale v Nette 2.1 to platilo. Pokud jste v šabloně ErrorPresenteru volali komponentu, která vytvářela url pro nějaký svůj signál - nějaké latte volání %%{link signal!}%%, tak to v ErrorPresenteru skončí chybou. Je to tím, že ErrorPresentery nemají routy.
 Tohle je dost nepříjemná vlastnost, které se nedá moc předcházet, protože ve složitější aplikaci se šablony různě includují do sebe a lehce se tak stane, že nějaká komponenta z nějakého sidebaru probublá i do ErrorPresenteru.
 Řešením je např. udržovat šablony pro ErrorPresentery oddělené, aby se do nich takové komponenty nedostávaly, nebo podmínkovat kód těchto komponent tak aby typicky pro HTTP Response kódy 404 prostě url se signálem nezobrazovalo.
@@ -65,19 +48,14 @@ Tohle je dost nepříjemná vlastnost, které se nedá moc předcházet, protož
 ===== Doporučení ====
 Na závěr doporučení pro ošetřování error stránek a tvorbu ErrorPresenterů
 
-  * Nezapomínat testovat ErrorPresentery a jejich chování. Ideálně automatizovaně. 
+  * Nezapomínat testovat ErrorPresentery a jejich chování. Ideálně automatizovaně.
   * Produkční režim při vývoji má svá úskalí, např. se neinvaliduje keš šablon.
   * ErrorPresentery neumí obsloužit url pro signály.
 
-Z toho pak plynou další doporučení, která nám ulehčí udržování aplikace. 
+Z toho pak plynou další doporučení, která nám ulehčí udržování aplikace.
 
   * Minimalizovat použití specifických ErrorPresenterů, idálně mít jen jeden hlavní ErrorPresenter. Pak se také všude dá použít jednoduché vyhazování výjimky %%BadRequestException%%.
   * Mít šablony ErrorPresenterů jednoduché a samostatné, aby pokud možno nezávisely na dalších šablonách. Zabrání se tak zavlečení různých částí aplikace, které ErrorPresenter neumí obsloužit, zejména signálů, ale i různých komponent, které ErrorPresenter neumí vytvořit.
-
-<code>
-bla
-$(test})
-</code>
 
 Něco by se určitě dalo zlepšit i v samotném Nette, potažmo v sandboxu Nette aplikace na GitHubu
 
